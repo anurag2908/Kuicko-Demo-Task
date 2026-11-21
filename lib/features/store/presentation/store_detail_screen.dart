@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/store_bloc.dart';
@@ -114,9 +115,7 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                   icon: const Icon(Icons.clear_rounded),
                   onPressed: () {
                     _searchController.clear();
-                    context
-                        .read<StoreBloc>()
-                        .add(const StoreSearchChanged(''));
+                    context.read<StoreBloc>().add(const StoreSearchChanged(''));
                   },
                 ),
                 filled: true,
@@ -153,28 +152,38 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
     return BlocBuilder<StoreBloc, StoreState>(
       builder: (context, state) {
         final picksForYouItems = state.store.menuItems
-            .where((item) =>
-                item.category == 'Picks for you 🔥' &&
-                (state.searchQuery.isEmpty ||
-                    item.name
-                        .toLowerCase()
-                        .contains(state.searchQuery.toLowerCase())))
+            .where(
+              (item) =>
+                  item.category == 'Picks for you 🔥' &&
+                  (state.searchQuery.isEmpty ||
+                      item.name.toLowerCase().contains(
+                        state.searchQuery.toLowerCase(),
+                      )),
+            )
             .toList();
 
         final macroItems = state.store.menuItems
-            .where((item) =>
-                item.category == 'Macro Madness' &&
-                (state.searchQuery.isEmpty ||
-                    item.name
-                        .toLowerCase()
-                        .contains(state.searchQuery.toLowerCase())))
+            .where(
+              (item) =>
+                  item.category == 'Macro Madness' &&
+                  (state.searchQuery.isEmpty ||
+                      item.name.toLowerCase().contains(
+                        state.searchQuery.toLowerCase(),
+                      )),
+            )
             .toList();
 
-        return Scaffold(
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            top: false,
-            child: CustomScrollView(
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarBrightness: Brightness.dark, // White icons & text on iOS (time, battery, wifi)
+            statusBarIconBrightness: Brightness.light, // White icons on Android
+          ),
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            body: SafeArea(
+              top: false,
+              child: CustomScrollView(
               controller: _scrollController,
               slivers: [
                 // 1. Hero Image with Floating Store Card (No clipping!)
@@ -233,21 +242,18 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                     sliver: SliverGrid(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 14,
-                        mainAxisSpacing: 18,
-                        childAspectRatio: 0.88,
-                      ),
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final item = picksForYouItems[index];
-                          return MenuGridItem(
-                            item: item,
-                            quantity: state.getItemQuantity(item.id),
-                          );
-                        },
-                        childCount: picksForYouItems.length,
-                      ),
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 14,
+                            mainAxisSpacing: 18,
+                            childAspectRatio: 0.88,
+                          ),
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final item = picksForYouItems[index];
+                        return MenuGridItem(
+                          item: item,
+                          quantity: state.getItemQuantity(item.id),
+                        );
+                      }, childCount: picksForYouItems.length),
                     ),
                   ),
                 ],
@@ -271,28 +277,24 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                     ),
                   ),
                   SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final item = macroItems[index];
-                        return MenuRowItem(
-                          item: item,
-                          quantity: state.getItemQuantity(item.id),
-                        );
-                      },
-                      childCount: macroItems.length,
-                    ),
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final item = macroItems[index];
+                      return MenuRowItem(
+                        item: item,
+                        quantity: state.getItemQuantity(item.id),
+                      );
+                    }, childCount: macroItems.length),
                   ),
                 ],
 
                 // 6. Generous Bottom Padding
-                const SliverToBoxAdapter(
-                  child: SizedBox(height: 80),
-                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 80)),
               ],
             ),
           ),
           bottomNavigationBar: BasketBottomBar(state: state),
-        );
+        ),
+      );
       },
     );
   }

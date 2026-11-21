@@ -23,6 +23,9 @@ class StoreHeroHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final topInset = MediaQuery.of(context).padding.top;
+    final heroHeight = 205.0 + topInset;
+
     return BlocBuilder<StoreBloc, StoreState>(
       buildWhen: (prev, curr) => prev.isFavorite != curr.isFavorite,
       builder: (context, state) {
@@ -36,7 +39,7 @@ class StoreHeroHeader extends StatelessWidget {
               children: [
                 // 1. Hero Image with Actions
                 SizedBox(
-                  height: 220,
+                  height: heroHeight,
                   width: double.infinity,
                   child: Stack(
                     fit: StackFit.expand,
@@ -53,22 +56,24 @@ class StoreHeroHeader extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Top gradient for button contrast
-                      const DecoratedBox(
+                      // Top gradient for status bar (time/battery) and button contrast
+                      DecoratedBox(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
-                            end: Alignment.center,
+                            end: Alignment.bottomCenter,
                             colors: [
-                              Color(0x66000000),
+                              Colors.black.withValues(alpha: 0.70),
+                              Colors.black.withValues(alpha: 0.30),
                               Colors.transparent,
                             ],
+                            stops: const [0.0, 0.35, 0.70],
                           ),
                         ),
                       ),
                       // Top Action Bar
                       Positioned(
-                        top: MediaQuery.of(context).padding.top + 8,
+                        top: topInset + 6,
                         left: 16,
                         right: 16,
                         child: Row(
