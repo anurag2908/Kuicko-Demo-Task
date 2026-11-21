@@ -9,8 +9,7 @@ import 'widgets/category_sticky_tab_bar.dart';
 import 'widgets/menu_grid_item.dart';
 import 'widgets/menu_row_item.dart';
 import 'widgets/promotions_carousel.dart';
-import 'widgets/store_info_card.dart';
-import 'widgets/store_sliver_header.dart';
+import 'widgets/store_hero_header.dart';
 
 class StoreDetailScreen extends StatefulWidget {
   const StoreDetailScreen({super.key});
@@ -178,24 +177,21 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
             child: CustomScrollView(
               controller: _scrollController,
               slivers: [
-                // 1. Collapsing Hero Header
-                StoreSliverHeader(
-                  store: state.store,
-                  onSearchTap: () => _showSearchDialog(context),
-                  onShareTap: _handleShare,
-                ),
-
-                // 2. Overlapping Store Info Card
+                // 1. Hero Image with Floating Store Card (No clipping!)
                 SliverToBoxAdapter(
-                  child: StoreInfoCard(store: state.store),
+                  child: StoreHeroHeader(
+                    store: state.store,
+                    onSearchTap: () => _showSearchDialog(context),
+                    onShareTap: _handleShare,
+                  ),
                 ),
 
-                // 3. Ticket Vouchers Row
+                // 2. Ticket Vouchers Carousel
                 SliverToBoxAdapter(
                   child: PromotionsCarousel(offers: state.store.offers),
                 ),
 
-                // 4. Sticky Category Tab Bar with Menu Icon
+                // 3. Sticky Category Tab Bar with Menu Icon
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: CategoryStickyTabBar(
@@ -205,13 +201,13 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                   ),
                 ),
 
-                // 5. Section 1: "Picks for you 🔥"
+                // 4. Section 1: "Picks for you 🔥"
                 if (picksForYouItems.isNotEmpty &&
                     (state.selectedCategory == 'Picks for you 🔥' ||
                         state.searchQuery.isNotEmpty)) ...[
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 18, 16, 4),
+                      padding: const EdgeInsets.fromLTRB(16, 20, 16, 4),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [
@@ -233,13 +229,13 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                     ),
                   ),
                   SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
+                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 22),
                     sliver: SliverGrid(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 14,
-                        mainAxisSpacing: 16,
+                        mainAxisSpacing: 18,
                         childAspectRatio: 0.88,
                       ),
                       delegate: SliverChildBuilderDelegate(
@@ -256,14 +252,14 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                   ),
                 ],
 
-                // 6. Section 2: "Macro Madness"
+                // 5. Section 2: "Macro Madness"
                 if (macroItems.isNotEmpty &&
                     (state.selectedCategory == 'Macro Madness' ||
                         state.selectedCategory == 'Picks for you 🔥' ||
                         state.searchQuery.isNotEmpty)) ...[
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 10, 16, 8),
+                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                       child: const Text(
                         'Macro Madness',
                         style: TextStyle(
@@ -288,9 +284,9 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
                   ),
                 ],
 
-                // Spacing at bottom
+                // 6. Generous Bottom Padding
                 const SliverToBoxAdapter(
-                  child: SizedBox(height: 60),
+                  child: SizedBox(height: 80),
                 ),
               ],
             ),
