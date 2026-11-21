@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 @immutable
 class MenuItemOption {
@@ -44,32 +44,37 @@ class MenuItem {
   const MenuItem({
     required this.id,
     required this.name,
-    required this.description,
     required this.price,
     required this.category,
     required this.image,
+    this.description = '',
+    this.macros,
+    this.calories,
     this.originalPrice,
     this.isPopular = false,
     this.isVegetarian = false,
     this.isSpicy = false,
-    this.calories,
+    this.isCustomizable = false,
+    this.imageBgColor = const Color(0xFF144B5B),
     this.optionGroups = const [],
   });
 
   final String id;
   final String name;
-  final String description;
   final double price;
-  final double? originalPrice;
   final String category;
   final String image;
+  final String description;
+  final String? macros;
+  final int? calories;
+  final double? originalPrice;
   final bool isPopular;
   final bool isVegetarian;
   final bool isSpicy;
-  final int? calories;
+  final bool isCustomizable;
+  final Color imageBgColor;
   final List<MenuItemOptionGroup> optionGroups;
 
-  bool get isCustomizable => optionGroups.isNotEmpty;
   bool get hasDiscount => originalPrice != null && originalPrice! > price;
 
   @override
@@ -128,17 +133,21 @@ class StoreOffer {
     required this.id,
     required this.title,
     required this.subtitle,
-    required this.code,
-    required this.minSpend,
-    required this.discountAmount,
+    required this.actionText,
+    this.isApplied = false,
+    this.iconData = Icons.delivery_dining_rounded,
+    this.iconColor = const Color(0xFFE84242),
+    this.iconBgColor = const Color(0xFFFFECE5),
   });
 
   final String id;
   final String title;
   final String subtitle;
-  final String code;
-  final double minSpend;
-  final double discountAmount;
+  final String actionText;
+  final bool isApplied;
+  final IconData iconData;
+  final Color iconColor;
+  final Color iconBgColor;
 }
 
 @immutable
@@ -146,40 +155,42 @@ class Store {
   const Store({
     required this.name,
     required this.tagline,
-    required this.cuisine,
     required this.rating,
     required this.reviewCount,
+    required this.ratingBadge,
     required this.deliveryMinutes,
-    required this.pickupMinutes,
-    required this.deliveryFee,
-    required this.minimumOrder,
+    required this.deliveryFeeText,
+    required this.deliveredBy,
+    required this.freeDeliveryPromo,
     required this.address,
-    required this.distanceKm,
     required this.heroImage,
-    required this.logoImage,
     required this.categories,
     required this.menuItems,
     required this.offers,
-    this.openingHours = '10:00 AM – 1:00 AM',
+    this.cuisine = 'Arabic · Lebanese · Bakery',
+    this.distanceKm = 2.4,
+    this.pickupMinutes = '10-15 mins',
+    this.openingHours = '7:00 AM – 1:00 AM Daily',
     this.hygieneScore = 'Grade A (Dubai Municipality)',
   });
 
   final String name;
   final String tagline;
-  final String cuisine;
   final double rating;
   final int reviewCount;
+  final String ratingBadge;
   final String deliveryMinutes;
-  final String pickupMinutes;
-  final double deliveryFee;
-  final double minimumOrder;
+  final String deliveryFeeText;
+  final String deliveredBy;
+  final String freeDeliveryPromo;
   final String address;
-  final double distanceKm;
   final String heroImage;
-  final String logoImage;
   final List<String> categories;
   final List<MenuItem> menuItems;
   final List<StoreOffer> offers;
+  final String cuisine;
+  final double distanceKm;
+  final String pickupMinutes;
   final String openingHours;
   final String hygieneScore;
 }

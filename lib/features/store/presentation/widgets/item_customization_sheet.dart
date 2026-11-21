@@ -192,7 +192,7 @@ class _CustomizationSheetContentState
                   Row(
                     children: [
                       Text(
-                        'AED ${widget.item.price.toStringAsFixed(0)}',
+                        'د.إ ${widget.item.price.toStringAsFixed(2)}',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
@@ -326,7 +326,7 @@ class _CustomizationSheetContentState
                                     ),
                                     if (opt.price > 0)
                                       Text(
-                                        '+AED ${opt.price.toStringAsFixed(0)}',
+                                        '+د.إ ${opt.price.toStringAsFixed(2)}',
                                         style: const TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w700,
@@ -446,24 +446,29 @@ class _CustomizationSheetContentState
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Add to Basket',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.center,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Add to Basket',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                'AED ${_currentTotalPrice.toStringAsFixed(0)}',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
+                                const SizedBox(width: 8),
+                                Text(
+                                  'د.إ ${_currentTotalPrice.toStringAsFixed(2)}',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),

@@ -6,7 +6,7 @@ class StoreState {
   const StoreState({
     required this.store,
     this.status = StoreStatus.loaded,
-    this.selectedCategory = 'Popular',
+    this.selectedCategory = 'Picks for you 🔥',
     this.searchQuery = '',
     this.isFavorite = false,
     this.isDelivery = true,
@@ -26,8 +26,8 @@ class StoreState {
   List<MenuItem> get visibleItems {
     final query = searchQuery.trim().toLowerCase();
     return store.menuItems.where((item) {
-      final matchesCategory = selectedCategory == 'Popular'
-          ? item.isPopular
+      final matchesCategory = selectedCategory == 'Picks for you 🔥'
+          ? (item.category == 'Picks for you 🔥' || item.isPopular)
           : item.category.toLowerCase() == selectedCategory.toLowerCase();
       final matchesSearch = query.isEmpty ||
           item.name.toLowerCase().contains(query) ||
@@ -54,27 +54,19 @@ class StoreState {
 
   double get activeDeliveryFee {
     if (!isDelivery || cartItemCount == 0) return 0.0;
-    // Check if free delivery coupon can be applied
-    if (subtotal >= 45.0) return 0.0;
-    return store.deliveryFee;
+    return 0.0; // Free delivery in reference
   }
 
-  double get discountAmount {
-    if (subtotal >= 60.0) {
-      return 15.0; // LUCA15 coupon
-    }
-    return 0.0;
-  }
+  double get discountAmount => 0.0;
 
   double get vatAmount {
     if (cartItemCount == 0) return 0.0;
-    return (subtotal - discountAmount).clamp(0.0, double.infinity) * 0.05; // 5% UAE VAT
+    return subtotal * 0.05; // 5% UAE VAT
   }
 
   double get grandTotal {
     if (cartItemCount == 0) return 0.0;
-    final total = subtotal + activeDeliveryFee + vatAmount - discountAmount;
-    return total < 0 ? 0.0 : total;
+    return subtotal + activeDeliveryFee + vatAmount - discountAmount;
   }
 
   int getItemQuantity(String itemId) => cartQuantities[itemId] ?? 0;

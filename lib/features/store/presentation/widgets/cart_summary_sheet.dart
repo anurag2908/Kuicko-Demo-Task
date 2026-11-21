@@ -28,7 +28,7 @@ class _CartSummaryContent extends StatelessWidget {
 
   static const Color _ink = Color(0xFF1E2229);
   static const Color _muted = Color(0xFF757A82);
-  static const Color _accent = Color(0xFFE84242);
+  static const Color _talabatOrange = Color(0xFFFF5A00);
   static const Color _line = Color(0xFFEBECEF);
 
   @override
@@ -67,7 +67,7 @@ class _CartSummaryContent extends StatelessWidget {
                 child: FilledButton(
                   onPressed: () => Navigator.pop(context),
                   style: FilledButton.styleFrom(
-                    backgroundColor: _accent,
+                    backgroundColor: _talabatOrange,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -216,7 +216,7 @@ class _CartSummaryContent extends StatelessWidget {
                           ),
                           // Price
                           Text(
-                            'AED ${cartItem.totalPrice.toStringAsFixed(0)}',
+                            'د.إ ${cartItem.totalPrice.toStringAsFixed(2)}',
                             style: const TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w800,
@@ -242,37 +242,23 @@ class _CartSummaryContent extends StatelessWidget {
                   const SizedBox(height: 10),
                   _SummaryRow(
                     label: 'Subtotal',
-                    value: 'AED ${state.subtotal.toStringAsFixed(0)}',
+                    value: 'د.إ ${state.subtotal.toStringAsFixed(2)}',
                   ),
                   const SizedBox(height: 6),
                   _SummaryRow(
-                    label: state.isDelivery
-                        ? 'Delivery Fee'
-                        : 'Pick-up Service',
-                    value: state.activeDeliveryFee == 0
-                        ? 'FREE'
-                        : 'AED ${state.activeDeliveryFee.toStringAsFixed(0)}',
-                    valueColor: state.activeDeliveryFee == 0
-                        ? const Color(0xFF2ECC71)
-                        : _ink,
+                    label: 'Delivery Fee',
+                    value: 'Free',
+                    valueColor: const Color(0xFF2E7D32),
                   ),
-                  if (state.discountAmount > 0) ...[
-                    const SizedBox(height: 6),
-                    _SummaryRow(
-                      label: 'Discount Voucher (LUCA15)',
-                      value: '-AED ${state.discountAmount.toStringAsFixed(0)}',
-                      valueColor: const Color(0xFF2ECC71),
-                    ),
-                  ],
                   const SizedBox(height: 6),
                   _SummaryRow(
                     label: 'UAE VAT (5%)',
-                    value: 'AED ${state.vatAmount.toStringAsFixed(1)}',
+                    value: 'د.إ ${state.vatAmount.toStringAsFixed(2)}',
                   ),
                   const Divider(height: 20, color: _line),
                   _SummaryRow(
                     label: 'Total Amount',
-                    value: 'AED ${state.grandTotal.toStringAsFixed(1)}',
+                    value: 'د.إ ${state.grandTotal.toStringAsFixed(2)}',
                     isBold: true,
                   ),
                   const SizedBox(height: 16),
@@ -289,7 +275,7 @@ class _CartSummaryContent extends StatelessWidget {
                         const Icon(
                           Icons.location_on_outlined,
                           size: 18,
-                          color: _accent,
+                          color: _talabatOrange,
                         ),
                         const SizedBox(width: 8),
                         Expanded(
@@ -321,16 +307,16 @@ class _CartSummaryContent extends StatelessWidget {
                       ScaffoldMessenger.of(context)
                         ..hideCurrentSnackBar()
                         ..showSnackBar(
-                          const SnackBar(
+                          SnackBar(
                             content: Text(
-                              'Order placed successfully! Luca’s Kitchen is preparing your food.',
+                              'Order placed with ${state.store.name}!',
                             ),
-                            duration: Duration(seconds: 3),
+                            duration: const Duration(seconds: 3),
                           ),
                         );
                     },
                     style: FilledButton.styleFrom(
-                      backgroundColor: _accent,
+                      backgroundColor: _talabatOrange,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -346,7 +332,7 @@ class _CartSummaryContent extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'AED ${state.grandTotal.toStringAsFixed(1)}',
+                          'د.إ ${state.grandTotal.toStringAsFixed(2)}',
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w800,
@@ -397,7 +383,7 @@ class _SummaryRow extends StatelessWidget {
             fontSize: isBold ? 16 : 13,
             fontWeight: isBold ? FontWeight.w800 : FontWeight.w700,
             color: valueColor ??
-                (isBold ? const Color(0xFFE84242) : const Color(0xFF1E2229)),
+                (isBold ? const Color(0xFFFF5A00) : const Color(0xFF1E2229)),
           ),
         ),
       ],

@@ -13,234 +13,270 @@ class StoreInfoCard extends StatelessWidget {
 
   static const Color _ink = Color(0xFF1E2229);
   static const Color _muted = Color(0xFF757A82);
-  static const Color _line = Color(0xFFEBECEF);
-  static const Color _accent = Color(0xFFE84242);
+  static const Color _talabatOrange = Color(0xFFFF5A00);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Store Logo Box
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  width: 58,
-                  height: 58,
-                  color: Colors.grey.shade100,
-                  child: Image.network(
-                    store.logoImage,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => const Icon(
-                      Icons.fastfood_rounded,
-                      color: _accent,
-                      size: 28,
-                    ),
-                  ),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+      child: Transform.translate(
+        offset: const Offset(0, -28),
+        child: InkWell(
+          onTap: () => showStoreInfoSheet(context, store),
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 16,
+                  offset: const Offset(0, 4),
                 ),
-              ),
-              const SizedBox(width: 14),
-              // Store Title & Cuisine
-              Expanded(
-                child: Column(
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Top Row: Logo + Info
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      store.name,
-                      style: const TextStyle(
-                        color: _ink,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: -0.4,
+                    // OVENTINE Logo
+                    Container(
+                      width: 54,
+                      height: 54,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF0F4C5C),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      alignment: Alignment.center,
+                      child: const Text(
+                        'OVENTINE',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8.5,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0.5,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      store.cuisine,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: _muted,
-                        fontWeight: FontWeight.w500,
+                    const SizedBox(width: 12),
+                    // Title & details
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  store.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                    color: _ink,
+                                  ),
+                                ),
+                              ),
+                              const Icon(
+                                Icons.chevron_right_rounded,
+                                size: 20,
+                                color: _muted,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
+                          // Trending Tagline
+                          const Row(
+                            children: [
+                              Icon(
+                                Icons.trending_up_rounded,
+                                size: 14,
+                                color: Color(0xFF2C7BE5),
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                'Top rated in Arabic',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Color(0xFF2C7BE5),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          // Rating & Badge
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.star_rounded,
+                                size: 16,
+                                color: Color(0xFFF5A623),
+                              ),
+                              const SizedBox(width: 3),
+                              Text(
+                                '${store.rating}',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w800,
+                                  color: _ink,
+                                ),
+                              ),
+                              const SizedBox(width: 3),
+                              Text(
+                                '(${(store.reviewCount / 1000).toStringAsFixed(0)}k+)',
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  color: _muted,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFFFF2E8),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.emoji_events_rounded,
+                                      size: 11,
+                                      color: _talabatOrange,
+                                    ),
+                                    SizedBox(width: 3),
+                                    Text(
+                                      'Exceptional',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w800,
+                                        color: _talabatOrange,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ),
-              // Store Info trigger icon
-              InkWell(
-                onTap: () => showStoreInfoSheet(context, store),
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  padding: const EdgeInsets.all(6),
+                const SizedBox(height: 12),
+                // Delivery metrics row
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.access_time_rounded,
+                        size: 14,
+                        color: _ink,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        store.deliveryMinutes,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: _ink,
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 6),
+                        child: Text('•', style: TextStyle(color: _muted)),
+                      ),
+                      const Icon(
+                        Icons.delivery_dining_rounded,
+                        size: 15,
+                        color: _ink,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        store.deliveryFeeText,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: _ink,
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 6),
+                        child: Text('•', style: TextStyle(color: _muted)),
+                      ),
+                      const Text(
+                        'Delivered by ',
+                        style: TextStyle(fontSize: 11, color: _muted),
+                      ),
+                      const Text(
+                        'talabat',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                          color: _talabatOrange,
+                        ),
+                      ),
+                      const SizedBox(width: 2),
+                      const Icon(
+                        Icons.info_outline_rounded,
+                        size: 12,
+                        color: _muted,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                // Bottom promo banner: Get your first 4 orders delivered free
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 7,
+                  ),
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    shape: BoxShape.circle,
+                    color: const Color(0xFFFFF3EB),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
-                    Icons.info_outline_rounded,
-                    size: 20,
-                    color: _ink,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          // Delivery & Rating stats bar
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF9FAFB),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: _line),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: _StatItem(
-                    icon: Icons.star_rounded,
-                    iconColor: const Color(0xFFF5A623),
-                    title: '${store.rating}',
-                    subtitle: '(${(store.reviewCount / 1000).toStringAsFixed(1)}k+)',
-                    isBold: true,
-                  ),
-                ),
-                _VerticalDivider(),
-                Expanded(
-                  child: _StatItem(
-                    icon: Icons.access_time_rounded,
-                    iconColor: const Color(0xFF2C7BE5),
-                    title: store.deliveryMinutes,
-                    subtitle: 'Delivery',
-                  ),
-                ),
-                _VerticalDivider(),
-                Expanded(
-                  child: _StatItem(
-                    icon: Icons.delivery_dining_rounded,
-                    iconColor: const Color(0xFF2ECC71),
-                    title: 'AED ${store.deliveryFee.toStringAsFixed(0)}',
-                    subtitle: 'Fee',
-                  ),
-                ),
-                _VerticalDivider(),
-                Expanded(
-                  child: _StatItem(
-                    icon: Icons.shopping_bag_outlined,
-                    iconColor: _muted,
-                    title: 'AED ${store.minimumOrder.toStringAsFixed(0)}',
-                    subtitle: 'Min order',
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.delivery_dining_rounded,
+                        size: 16,
+                        color: _talabatOrange,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          store.freeDeliveryPromo,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: _talabatOrange,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 12),
-          // Deliver to Dubai location pill
-          Row(
-            children: [
-              const Icon(
-                Icons.location_on_outlined,
-                size: 16,
-                color: _accent,
-              ),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  'Delivering to ${store.address}',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: _ink,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const Icon(
-                Icons.keyboard_arrow_right_rounded,
-                size: 18,
-                color: _muted,
-              ),
-            ],
-          ),
-        ],
+        ),
       ),
-    );
-  }
-}
-
-class _StatItem extends StatelessWidget {
-  const _StatItem({
-    required this.icon,
-    required this.iconColor,
-    required this.title,
-    required this.subtitle,
-    this.isBold = false,
-  });
-
-  final IconData icon;
-  final Color iconColor;
-  final String title;
-  final String subtitle;
-  final bool isBold;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 14, color: iconColor),
-            const SizedBox(width: 2),
-            Flexible(
-              child: Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: isBold ? FontWeight.w800 : FontWeight.w700,
-                  color: const Color(0xFF1E2229),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 2),
-        Text(
-          subtitle,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            fontSize: 9,
-            color: Color(0xFF757A82),
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _VerticalDivider extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 1,
-      height: 22,
-      color: const Color(0xFFEBECEF),
     );
   }
 }

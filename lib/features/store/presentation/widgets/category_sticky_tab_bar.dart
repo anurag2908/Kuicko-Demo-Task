@@ -8,21 +8,19 @@ import '../../bloc/store_state.dart';
 class CategoryStickyTabBar extends SliverPersistentHeaderDelegate {
   CategoryStickyTabBar({
     required this.categories,
-    required this.searchController,
-    required this.searchFocusNode,
+    required this.onMenuTap,
   });
 
   final List<String> categories;
-  final TextEditingController searchController;
-  final FocusNode searchFocusNode;
+  final VoidCallback onMenuTap;
 
-  static const double _headerHeight = 106.0;
-
-  @override
-  double get minExtent => _headerHeight;
+  static const double _height = 48.0;
 
   @override
-  double get maxExtent => _headerHeight;
+  double get minExtent => _height;
+
+  @override
+  double get maxExtent => _height;
 
   @override
   Widget build(
@@ -32,17 +30,16 @@ class CategoryStickyTabBar extends SliverPersistentHeaderDelegate {
   ) {
     return BlocBuilder<StoreBloc, StoreState>(
       buildWhen: (prev, curr) =>
-          prev.selectedCategory != curr.selectedCategory ||
-          prev.searchQuery != curr.searchQuery,
+          prev.selectedCategory != curr.selectedCategory,
       builder: (context, state) {
         return Container(
-          height: _headerHeight,
+          height: _height,
           decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: overlapsContent
                 ? [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.06),
+                      color: Colors.black.withValues(alpha: 0.06),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -52,109 +49,68 @@ class CategoryStickyTabBar extends SliverPersistentHeaderDelegate {
               bottom: BorderSide(color: Color(0xFFEBECEF), width: 1),
             ),
           ),
-          child: Column(
+          child: Row(
             children: [
-              // Search input
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 6),
-                child: SizedBox(
-                  height: 38,
-                  child: TextField(
-                    controller: searchController,
-                    focusNode: searchFocusNode,
-                    onChanged: (val) {
-                      context
-                          .read<StoreBloc>()
-                          .add(StoreSearchChanged(val));
-                    },
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Color(0xFF1E2229),
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'Search dishes or categories...',
-                      hintStyle: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF757A82),
-                      ),
-                      prefixIcon: const Icon(
-                        Icons.search_rounded,
-                        size: 18,
-                        color: Color(0xFF757A82),
-                      ),
-                      prefixIconConstraints: const BoxConstraints(
-                        minWidth: 36,
-                        minHeight: 36,
-                      ),
-                      suffixIcon: searchController.text.isNotEmpty
-                          ? IconButton(
-                              icon: const Icon(Icons.clear_rounded, size: 16),
-                              color: const Color(0xFF757A82),
-                              onPressed: () {
-                                searchController.clear();
-                                context
-                                    .read<StoreBloc>()
-                                    .add(const StoreSearchChanged(''));
-                              },
-                            )
-                          : null,
-                      suffixIconConstraints: const BoxConstraints(
-                        minWidth: 32,
-                        minHeight: 32,
-                      ),
-                      filled: true,
-                      fillColor: const Color(0xFFF1F3F5),
-                      contentPadding: EdgeInsets.zero,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
+              // Menu icon button ☰
+              IconButton(
+                onPressed: onMenuTap,
+                icon: const Icon(
+                  Icons.menu_rounded,
+                  size: 22,
+                  color: Color(0xFF1E2229),
                 ),
+                tooltip: 'All categories',
+                padding: const EdgeInsets.only(left: 14, right: 8),
+                constraints: const BoxConstraints(),
               ),
-              // Category pills
-              SizedBox(
-                height: 44,
+              // Category Tabs
+              Expanded(
                 child: ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   scrollDirection: Axis.horizontal,
                   itemCount: categories.length,
                   separatorBuilder: (context, index) =>
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 18),
                   itemBuilder: (context, index) {
                     final cat = categories[index];
-                    final isSelected = state.selectedCategory.toLowerCase() ==
-                        cat.toLowerCase();
+                    final isSelected = state.selectedCategory == cat;
 
-                    return Center(
-                      child: ChoiceChip(
-                        label: Text(cat),
-                        selected: isSelected,
-                        onSelected: (_) {
-                          context
-                              .read<StoreBloc>()
-                              .add(StoreCategorySelected(cat));
-                        },
-                        showCheckmark: false,
-                        labelStyle: TextStyle(
-                          fontSize: 12,
-                          fontWeight:
-                              isSelected ? FontWeight.w700 : FontWeight.w600,
-                          color: isSelected
-                              ? Colors.white
-                              : const Color(0xFF1E2229),
-                        ),
-                        backgroundColor: const Color(0xFFF1F3F5),
-                        selectedColor: const Color(0xFFE84242),
-                        side: BorderSide.none,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 6,
-                        ),
+                    return InkWell(
+                      onTap: () {
+                        context
+                            .read<StoreBloc>()
+                            .add(StoreCategorySelected(cat));
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Text(
+                              cat,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: isSelected
+                                    ? FontWeight.w800
+                                    : FontWeight.w500,
+                                color: isSelected
+                                    ? const Color(0xFF1E2229)
+                                    : const Color(0xFF757A82),
+                              ),
+                            ),
+                          ),
+                          // Underline indicator
+                          Container(
+                            height: 2.5,
+                            width: 24,
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? const Color(0xFF1E2229)
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   },

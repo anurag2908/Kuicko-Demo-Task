@@ -10,155 +10,152 @@ class PromotionsCarousel extends StatelessWidget {
 
   final List<StoreOffer> offers;
 
-  static const Color _ink = Color(0xFF1E2229);
-  static const Color _muted = Color(0xFF757A82);
-
   @override
   Widget build(BuildContext context) {
     if (offers.isEmpty) return const SizedBox.shrink();
 
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.only(top: 8, bottom: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.local_offer_outlined,
-                  size: 16,
-                  color: Color(0xFFE84242),
-                ),
-                const SizedBox(width: 6),
-                const Text(
-                  'Deals & Offers',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: _ink,
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  '${offers.length} available',
-                  style: const TextStyle(fontSize: 11, color: _muted),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            height: 82,
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              scrollDirection: Axis.horizontal,
-              itemCount: offers.length,
-              separatorBuilder: (context, index) => const SizedBox(width: 10),
-              itemBuilder: (context, index) {
-                final offer = offers[index];
-                return _OfferCard(offer: offer);
-              },
-            ),
-          ),
-        ],
+      padding: const EdgeInsets.only(bottom: 12),
+      child: SizedBox(
+        height: 100,
+        child: ListView.separated(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          scrollDirection: Axis.horizontal,
+          itemCount: offers.length,
+          separatorBuilder: (context, index) => const SizedBox(width: 10),
+          itemBuilder: (context, index) {
+            final offer = offers[index];
+            return _TicketVoucherCard(offer: offer);
+          },
+        ),
       ),
     );
   }
 }
 
-class _OfferCard extends StatelessWidget {
-  const _OfferCard({required this.offer});
+class _TicketVoucherCard extends StatelessWidget {
+  const _TicketVoucherCard({required this.offer});
 
   final StoreOffer offer;
 
+  static const Color _ink = Color(0xFF1E2229);
+  static const Color _muted = Color(0xFF757A82);
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            SnackBar(
-              content: Text('Voucher "${offer.code}" applied to order!'),
-              duration: const Duration(seconds: 2),
-            ),
-          );
-      },
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        width: 250,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFF8F0),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFFFDEC2)),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: const Color(0xFFFF7A00).withOpacity(0.12),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(
-                Icons.percent_rounded,
-                color: Color(0xFFFF7A00),
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      width: 215,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+      ),
+      child: Column(
+        children: [
+          // Upper section: Icon + Title
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 8, 10, 6),
+              child: Row(
                 children: [
-                  Text(
-                    offer.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w800,
-                      color: Color(0xFF1E2229),
+                  Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: offer.iconBgColor,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      offer.iconData,
+                      size: 18,
+                      color: offer.iconColor,
                     ),
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    offer.subtitle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      color: Color(0xFF757A82),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          offer.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: _ink,
+                            height: 1.2,
+                          ),
+                        ),
+                        if (offer.subtitle.isNotEmpty && !offer.isApplied) ...[
+                          const SizedBox(height: 2),
+                          Text(
+                            offer.subtitle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 9,
+                              color: _muted,
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 6),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: const Color(0xFFFFDEC2)),
-              ),
-              child: Text(
-                offer.code,
-                style: const TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xFFFF7A00),
-                ),
+          ),
+          // Divider with ticket cutouts style
+          Container(
+            height: 1,
+            color: const Color(0xFFE5E7EB),
+          ),
+          // Bottom action strip
+          Container(
+            height: 28,
+            decoration: BoxDecoration(
+              color: offer.isApplied
+                  ? const Color(0xFFEBF7ED)
+                  : const Color(0xFFFAFAFA),
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(11),
               ),
             ),
-          ],
-        ),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (offer.isApplied) ...[
+                  const Text(
+                    'Applied',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF2E7D32),
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  const Icon(
+                    Icons.check_circle_rounded,
+                    size: 14,
+                    color: Color(0xFF2E7D32),
+                  ),
+                ] else
+                  const Text(
+                    'More info',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: _ink,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

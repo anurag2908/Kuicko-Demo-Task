@@ -11,7 +11,7 @@ class BasketBottomBar extends StatelessWidget {
 
   final StoreState state;
 
-  static const Color _accent = Color(0xFFE84242);
+  static const Color _talabatOrange = Color(0xFFFF5A00);
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +25,9 @@ class BasketBottomBar extends StatelessWidget {
         child: FilledButton(
           onPressed: () => showCartSummarySheet(context),
           style: FilledButton.styleFrom(
-            backgroundColor: _accent,
+            backgroundColor: _talabatOrange,
             elevation: 4,
-            shadowColor: _accent.withOpacity(0.4),
+            shadowColor: _talabatOrange.withValues(alpha: 0.4),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -41,7 +41,7 @@ class BasketBottomBar extends StatelessWidget {
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.22),
+                  color: Colors.white.withValues(alpha: 0.22),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -67,7 +67,7 @@ class BasketBottomBar extends StatelessWidget {
               ),
               // Price
               Text(
-                'AED ${state.subtotal.toStringAsFixed(0)}',
+                'د.إ ${state.subtotal.toStringAsFixed(2)}',
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w800,
